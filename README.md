@@ -8,6 +8,7 @@ The data was collected and transformed to a text corpus and tokenized.
 This assignment was aimed to imporve MyCourses with text analytics/natural language processing (NLP).
 The method can be applied to other survey response dataset and to serve other business purposes.
 
+link to the dashboard: https://cc-r-01.shinyapps.io/CC_textmining/
 
 
 
