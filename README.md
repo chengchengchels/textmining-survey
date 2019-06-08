@@ -1,7 +1,7 @@
 # textmining-survey
 
 
-This is a dashboard with text-data frequency charts in shiny,
+This is a dashboard with text-data frequency charts in R shiny,
 based on a class assignment's text data generated from students' audio responses with Microsoft speech recognition.
 The data was collected and transformed to a text corpus and tokenized. 
 
