@@ -1,11 +1,4 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
+
 
 library(shiny)
 library(textreadr)
@@ -13,10 +6,9 @@ MIB <- read_document(file="sppech record.docx")
 my_df <- as.data.frame(matrix(nrow=65, ncol=5))
 for(z in 1:5){for(i in 1:65){my_df[i,z]<- MIB[i*5+z-5]}}
 
-my_df<-cbind(seq(1:65),my_df)#add a sequence column to the front,not end.
-colnames(my_df) <- c("ID","Gender", "Age", "Pro", "Con", "Attitude")##change the column names
+my_df<-cbind(seq(1:65),my_df)
+colnames(my_df) <- c("ID","Gender", "Age", "Pro", "Con", "Attitude")
 
-#p.s. when cleaning data: variable name should be exactly the same, e.g. negative v.s. Negative won't work.
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -104,18 +96,15 @@ shinyServer(function(input, output) {
     
   })
   output$wordcloud2 <- renderPlot({
-    all<-rbind(positive,negative)##这个all 虽然在last plot 里define了，但每个following用到它的plot里，也要重新assign value to object一下？？
+    all<-rbind(positive,negative)
     all %>%
       inner_join(get_sentiments("bing")) %>%
-      #count(word, sentiment, sort = TRUE) %>% 我的raw subeject（positive,negative)都count过了，不需此行
       acast(word ~ sentiment, value.var = "n", fill = 0) %>%
       comparison.cloud(scale=c(3,3))
-    #export as image-update the preview (1500*1800) to view the full image
-  
+   
   })
   
   output$contribution <- renderPlot({
-    #find out how much each word contributed to each sentiment.
     p_word_counts <- positive %>%
       inner_join(get_sentiments("bing")) %>%
       ungroup()
@@ -149,7 +138,7 @@ shinyServer(function(input, output) {
     all_ti <-all %>%
     inner_join(get_sentiments("bing"))%>%
     bind_tf_idf(word,sentiment, n)
-  # looking at the graphical apprach:
+  # looking at the graphical approach:
   
   all_ti %>%
     arrange(desc(tf_idf)) %>%
@@ -172,10 +161,10 @@ shinyServer(function(input, output) {
   output$bigram_p <- renderPlot({
     
     p_bigrams<-my_df%>%select(Pro)%>%unnest_tokens(bigram, Pro, token = "ngrams", n=2)%>%count(bigram,sort = TRUE)
-    p_bigrams #We want to see the bigrams (words that appear together, "pairs")
+    p_bigrams 
     
     p_bigrams %>%
-      count(bigram, sort = TRUE) #this has many stop words, need to remove them 
+      count(bigram, sort = TRUE) 
     
 
     bigrams_separated <- p_bigrams %>%
@@ -199,7 +188,6 @@ shinyServer(function(input, output) {
   })
   
   output$bigram_n <- renderPlot({
-    ###negative
     n_bigrams<-my_df%>%select(Con)%>%unnest_tokens(bigram, Con, token = "ngrams", n=2)%>%count(bigram,sort = TRUE)
     n_bigrams
     
